@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - Biology Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    /* --- GLOBAL RESET --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+    body {
+        background: url('web_assets/background_imagee.png') no-repeat center center/cover;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* --- MAIN LAYOUT --- */
+    .main-wrapper {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(26, 67, 33, 0.05);
+        position: relative;
+    }
+
+    /* --- LEFT SECTION --- */
+    .left-section {
+        flex: 1.2;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 0; 
+        position: relative; 
+    }
+
+    .teacher-img {
+        height: 90vh;
+        width: auto;
+        object-fit: contain;
+        z-index: 2;
+        filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.6)) 
+                drop-shadow(20px 10px 50px rgba(26, 67, 33, 0.4));
+        opacity: 0;
+        animation: slideInLeft 1s ease-out forwards;
+        transition: transform 0.5s ease;
+    }
+    
+    .left-section:hover .teacher-img { transform: scale(1.02); }
+
+    /* --- QUOTE BOX --- */
+    #quote-box {
+        position: absolute;
+        top: 25%; 
+        right: 40px; 
+        max-width: 280px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        border-bottom-left-radius: 2px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        opacity: 0;
+        transform: scale(0.5) translateY(20px); 
+        animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        animation-delay: 0.8s;
+    }
+
+    #quote { color: #1a4321; font-size: 13px; font-style: italic; line-height: 1.5; font-weight: 500; margin: 0; }
+    #quote-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #d4a017; margin-bottom: 5px; font-weight: 700; display: block; }
+
+    /* --- RIGHT SECTION --- */
+    .right-section {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding-right: 8%;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        padding: 50px 40px;
+        border-radius: 24px;
+        width: 450px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        animation: slideInRight 1s ease-out forwards;
+    }
+
+    h2 { color: #1a4321; margin-bottom: 10px; font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+    .subtitle { color: #555; font-size: 14px; margin-bottom: 35px; font-weight: 400; }
+
+    /* --- INPUTS --- */
+    .input-box {
+        position: relative;
+        width: 100%;
+        height: 60px;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+    }
+
+    .input-box:focus-within {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #1a4321;
+        box-shadow: 0 4px 15px rgba(26, 67, 33, 0.1);
+    }
+
+    .input-box input {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #1a4321;
+        font-weight: 500;
+        padding: 25px 50px 5px 20px;
+    }
+
+    .input-box label {
+        position: absolute;
+        top: 50%;
+        left: 20px;
+        transform: translateY(-50%);
+        font-size: 15px;
+        color: #666;
+        pointer-events: none;
+        transition: .3s ease-out;
+    }
+
+    .input-box input:focus ~ label,
+    .input-box input:valid ~ label {
+        top: 12px;
+        font-size: 11px;
+        color: #1a4321;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .icon {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px; 
+        height: 22px;
+        fill: #1a4321; 
+        opacity: 0.4;
+        transition: opacity 0.3s, fill 0.3s;
+        pointer-events: none;
+    }
+
+    .input-box:focus-within .icon { opacity: 1; fill: #1a4321; }
+    .toggle-password { cursor: pointer; pointer-events: auto; }
+
+    /* --- BUTTONS --- */
+    .mission-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #d4a017 0%, #b88a14 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(212, 160, 23, 0.2);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    
+    .mission-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(212, 160, 23, 0.4); }
+    .mission-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .signup-text { margin-top: 25px; font-size: 14px; color: #444; }
+    .signup-text a { color: #1a4321; font-weight: 700; text-decoration: none; transition: color 0.3s; }
+    .signup-text a:hover { text-decoration: underline; }
+
+    /* --- ANIMATIONS --- */
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes popIn { 0% { opacity: 0; transform: scale(0.5) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+
+    @media (max-width: 900px) {
+        .main-wrapper { flex-direction: column; }
+        .left-section { flex: 0; height: auto; min-height: 80px; width: 100%; justify-content: center; }
+        .teacher-img { display: none; }
+        #quote-box { position: relative; top: auto; right: auto; margin-top: 20px; width: 90%; max-width: 90%; border-bottom-left-radius: 20px; animation: slideInRight 1s ease-out forwards; animation-delay: 0s; }
+        #quote-box::after { display: none; }
+        .right-section { padding-right: 0; justify-content: center; width: 100%; }
+        .glass-card { width: 90%; padding: 30px; margin-bottom: 20px; }
+    }
+
+    /* --- TOAST NOTIFICATION CSS --- */
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-left: 5px solid #1a4321;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        z-index: 9999;
+        transform: translateX(150%);
+        transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    .toast.show {
+        transform: translateX(0);
+    }
+    .toast.error {
+        border-left: 5px solid #d4a017;
+    }
+    #toast-message {
+        color: #1a4321;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    #toast-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+        line-height: 1;
+        transition: color 0.3s;
+    }
+    #toast-close:hover {
+        color: #1a4321;
+    }
+</style>
+<body>
+
+    <div class="main-wrapper">
+        <div class="left-section">
+            <div id="quote-box">
+                <span id="quote-label">Daily Biology Fact</span>
+                <p id="quote">Loading knowledge...</p>
+            </div>
+            <img src="web_assets/Teacher_image-2.png" alt="Teacher" class="teacher-img">
+        </div>
+
+        <div class="right-section">
+            <div class="glass-card">
+                <h2>Student Login</h2>
+                <p class="subtitle">Resume your biology mission</p>
+                
+                <form id="login-form">
+                    <div class="input-box">
+                        <input type="email" id="user-email" required>
+                        <label>Email Address</label>
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="password" id="password-input" required>
+                        <label>Password</label>
+                        <svg class="icon toggle-password" id="toggle-btn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    </div>
+                    
+                    <button type="submit" class="mission-btn" id="submit-btn">RESUME MISSION</button>
+                </form>
+
+                <p class="signup-text">Don't have an account? <a href="Sign_up.html">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-notification" class="toast">
+        <span id="toast-message">Message goes here</span>
+        <button id="toast-close" onclick="closeToast()">&times;</button>
+    </div>
+
+    <script>
+        // --- TOAST NOTIFICATION LOGIC ---
+        let toastTimeout;
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.innerText = message;
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+
+            toast.classList.add('show');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                closeToast();
+            }, 5000);
+        }
+
+        function closeToast() {
+            document.getElementById('toast-notification').classList.remove('show');
+        }
+
+        // --- 1. CONFIGURATION ---
+        const AUTH_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0wZHqzzTFsWmrwMXTM7ddTxx_1RKeRM4nD54lXW2wJGqtjDOwAEAYYp3Q9jlmXNV2Lw/exec';
+        const QUOTE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRucYkCMJo8TAmW5IP2eWpLKVacV9hVNqCjzYve8a3lbKrMj9hkQ8pQjRpYdPPmgGRcg_MCvrnZCRpx/pub?output=csv';
+
+        // --- 2. AUTHENTICATION LOGIC ---
+        const loginForm = document.getElementById('login-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            const email = document.getElementById('user-email').value;
+            const password = document.getElementById('password-input').value;
+            
+            submitBtn.innerText = "VERIFYING...";
+            submitBtn.disabled = true;
+
+            const dataPayload = {
+                action: "login",  
+                email: email,
+                password: password
+            };
+
+            fetch(AUTH_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(dataPayload)
+            })
+            .then(res => res.json()) 
+            .then(data => {
+                if (data.result === "success") {
+                    // Success: Save Name and Redirect
+                    localStorage.setItem('studentName', data.fullName);
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('studentAvatarId', data.avatarId);
+                    window.location.href = "index.html"; 
+                } else if (data.result === "status_false") {
+                    // Failure: Account not approved - REPLACED ALERT WITH TOAST
+                    showToast("Access Denied: Your account status is NOT active yet. Ask your teacher to approve you.", true);
+                    submitBtn.innerText = "RESUME MISSION";
+                    submitBtn.disabled = false;
+                } else {
+                    // Failure: Wrong password or email - REPLACED ALERT WITH TOAST
+                    showToast("Invalid Email or Password. Please try again.", true);
+                    submitBtn.innerText = "RESUME MISSION";
+                    submitBtn.disabled = false;
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                // Network Error - REPLACED ALERT WITH TOAST
+                showToast("Connection Error. Check your internet.", true);
+                submitBtn.innerText = "RESUME MISSION";
+                submitBtn.disabled = false;
+            });
+        });
+
+        // --- 3. QUOTE LOGIC ---
+        async function loadQuote() {
+            try {
+                const res = await fetch(QUOTE_URL);
+                const text = await res.text();
+                const rows = text.split('\n').slice(1);
+                
+                if(rows.length > 0) {
+                    const randomRow = rows[Math.floor(Math.random() * rows.length)];
+                    document.getElementById('quote').innerText = randomRow.split(',')[0].replace(/"/g, "");
+                }
+            } catch(e) { 
+                document.getElementById('quote').innerText = "Biology is the study of life."; 
+            }
+        }
+        loadQuote();
+
+        // --- 4. PASSWORD TOGGLE ---
+        const passInput = document.getElementById('password-input');
+        const toggle = document.getElementById('toggle-btn');
+        const eyeOpen = "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z";
+        const eyeClosed = "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.45-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46A11.804 11.804 0 0 0 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z";
+
+        toggle.addEventListener('click', () => {
+            const path = toggle.querySelector('path');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                path.setAttribute('d', eyeClosed);
+            } else {
+                passInput.type = 'password';
+                path.setAttribute('d', eyeOpen);
+            }
+        });
+    </script>
+</body>
+</html>

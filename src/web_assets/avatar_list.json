@@ -1,0 +1,15 @@
+[
+    { "id": 1, "name": "Brown Jacket", "iconFile": "avatar_01_icon.png", "spriteFile": "avatar_01_sprite.png" },
+    { "id": 2, "name": "Red Cap", "iconFile": "avatar_02_icon.png", "spriteFile": "avatar_02_sprite.png" },
+    { "id": 3, "name": "Green Turban", "iconFile": "avatar_03_icon.png", "spriteFile": "avatar_03_sprite.png" },
+    { "id": 4, "name": "Centurion", "iconFile": "avatar_04_icon.png", "spriteFile": "avatar_04_sprite.png" },
+    { "id": 5, "name": "Knight", "iconFile": "avatar_05_icon.png", "spriteFile": "avatar_05_sprite.png" },
+    { "id": 6, "name": "Black Cap", "iconFile": "avatar_06_icon.png", "spriteFile": "avatar_06_sprite.png" },
+    { "id": 7, "name": "Pink Hair", "iconFile": "avatar_07_icon.png", "spriteFile": "avatar_07_sprite.png" },
+    { "id": 8, "name": "Purple Hijab", "iconFile": "avatar_08_icon.png", "spriteFile": "avatar_08_sprite.png" },
+    { "id": 9, "name": "Blonde Hair", "iconFile": "avatar_09_icon.png", "spriteFile": "avatar_09_sprite.png" },
+    { "id": 11, "name": "Bun Hair", "iconFile": "avatar_11_icon.png", "spriteFile": "avatar_11_sprite.png" },
+    { "id": 12, "name": "Cat Ear Hijab", "iconFile": "avatar_12_icon.png", "spriteFile": "avatar_12_sprite.png" },
+    { "id": 13, "name": "Goggles", "iconFile": "avatar_13_icon.png", "spriteFile": "avatar_13_sprite.png" },
+    { "id": 14, "name": "Samurai", "iconFile": "avatar_14_icon.png", "spriteFile": "avatar_14_sprite.png" }
+]

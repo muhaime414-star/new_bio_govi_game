@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - Biology Lab</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script> -->
+    <style>
+        /* --- GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            /* FIXED PATH: index.html is already in src, so we just go into scenes/ */
+            background: url('web_assets/background_imagee.png') no-repeat center center/cover;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #e8f5e9;
+        }
+
+        .main-container {
+            width: 100%; height: 100vh;
+            background-color: rgba(26, 67, 33, 0.05); 
+            display: flex; flex-direction: column;
+            padding: 20px 50px;
+        }
+
+        /* --- NAVIGATION --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; margin-bottom: 20px; }
+        .logo { font-size: 28px; font-weight: 800; color: #1a4321; }
+        .nav-links { display: flex; gap: 40px; }
+        
+        /* FIXED: Changed href to # so Parcel stops crashing */
+        .nav-links a { text-decoration: none; color: #1a4321; font-weight: 600; font-size: 18px; }
+        
+        /* --- PROFILE BUTTON --- */
+        .user-greeting {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a4321;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: background 0.3s ease;
+        }
+        
+        #greeting-text { position: relative; display: inline-block; }
+        #greeting-text::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0;
+            background-color: #1a4321; transition: width 0.3s ease-in-out;
+        }
+        .user-greeting:hover #greeting-text::after { width: 100%; }
+
+        /* --- GAME CONTAINER --- */
+        .game-wrapper {
+            flex: 1; display: flex; justify-content: center; align-items: center; position: relative; flex-direction: column; gap: 15px;
+        }
+
+        .game-status {
+            font-weight: 600; color: #1a4321; background: rgba(255,255,255,0.8); 
+            padding: 10px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        #phaser-game-container {
+            width: 1000px;  
+            height: 500px;  
+            border-radius: 30px; 
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            margin-top: -30px;
+        }
+
+       
+
+        .back-btn {
+            position: absolute; top: 0; left: 0;
+            background: rgba(255, 255, 255, 0.8); padding: 10px 20px;
+            border-radius: 50px; text-decoration: none; color: #1a4321; font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        .back-btn:hover { transform: scale(1.05); }
+
+        /* --- TOAST NOTIFICATION CSS --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-left: 5px solid #1a4321;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 9999;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+        .toast.error {
+            border-left: 5px solid #d4a017;
+        }
+        #toast-message {
+            color: #1a4321;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        #toast-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+        #toast-close:hover {
+            color: #1a4321;
+        }
+        /* --- MOBILE WARNING CSS --- */
+        #mobile-warning {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background-color: #1a4321;
+            color: #f4ebd8;
+            padding: 20px;
+            z-index: 10000;
+        }
+
+        #mobile-warning h1 {
+            font-size: 32px;
+            font-family: 'Georgia', serif;
+            margin-bottom: 15px;
+        }
+
+        #mobile-warning p {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* If the screen is smaller than 768px (Typical Mobile Phones) */
+        @media (max-width: 767px) {
+            .main-container {
+                display: none !important; /* Hide the entire game UI */
+            }
+            #mobile-warning {
+                display: flex; /* Show the warning */
+            }
+        }
+    </style>
+</head>
+<body>
+   
+    <div id="mobile-warning">
+        <h1>Screen Too Small</h1>
+        <p>This quest requires a larger viewport.</p>
+        <p>Please use a tablet, laptop, or desktop computer to access the Biology Lab.</p>
+    </div>
+
+    <div class="main-container">
+        <nav>
+            <div class="logo">LOGO</div>
+        
+            <div class="nav-links">
+                <a href="./index.html">Home</a>
+                <a href="./Class_page.html">Class</a>
+                <a href="./game_chose_page.html" style="color: #e67e22; font-weight: 800;">Games</a> 
+            </div>
+            
+            
+            <div class="user-greeting" onclick="showToast('You can not check it from here', true)">
+                <span id="greeting-text">Hi, Student</span> 
+            </div>
+        </nav>
+
+        <div class="game-wrapper">
+            <a href="./game_chose_page.html" class="back-btn">⬅ Back</a>
+            <div id="phaser-game-container"></div>
+        </div>
+    </div>
+    <div id="toast-notification" class="toast">
+    <span id="toast-message">Message goes here</span>
+    <button id="toast-close" onclick="closeToast()">&times;</button>
+    </div>
+
+    <script>
+        const studentName = localStorage.getItem('studentName');
+        if (studentName) {
+            document.getElementById('greeting-text').innerText = "Hi, " + studentName;
+        }
+                // --- TOAST NOTIFICATION LOGIC ---
+        let toastTimeout;
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-notification');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.innerText = message;
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+
+            toast.classList.add('show');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                closeToast();
+            }, 5000);
+        }
+
+        function closeToast() {
+            document.getElementById('toast-notification').classList.remove('show');
+        }
+    </script>
+    
+    <script type="module" src="./Game_index.js"></script>
+</body>
+</html>
