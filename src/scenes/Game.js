@@ -66,7 +66,7 @@ export default class Game extends Phaser.Scene {
     // 6. Animations and Player Setup
     this.anims.create({
         key: 'walk',
-        frames: this.anims.generateFrameNumbers('player_sprite', { start: 0, end: 3}),
+        frames: this.anims.generateFrameNumbers('player_sprite', { start: 0, end: 2}),
         frameRate: 12,
         repeat: -1
     });
