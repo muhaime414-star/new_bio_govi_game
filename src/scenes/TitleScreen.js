@@ -110,7 +110,7 @@ export default class TitleScreen extends Phaser.Scene {
         this.load.audio('bgm', bgMusic); 
         this.load.audio('jump_sfx', jumpSfxFile);
         this.load.audio('damage_sfx', damageSfxFile);
-        this.load.spritesheet('enemy_spritesheet', enemy_spritesheet, { frameWidth: 200, frameHeight: 200 });
+        this.load.spritesheet('enemy_spritesheet', enemy_spritesheet, { frameWidth: 400, frameHeight: 400 });
         this.load.image('ancient_sage', ancientSageImg);
 
         // --- NEW: DYNAMIC PLAYER SPRITE LOADING ---
